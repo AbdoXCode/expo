@@ -55,7 +55,7 @@ sealed class DestinationSink(val spec: DestinationSpec) {
           target.mkdir()
           copyDirectoryViaStream(source, target)
         }
-        else -> copyFileViaStream(source, target)
+        else -> copyFileWithChannelFallback(source, target)
       }
       return target.uri
     }
@@ -84,7 +84,7 @@ sealed class DestinationSink(val spec: DestinationSpec) {
         } else {
           target
         }
-        copyFileViaStream(source, actualDest)
+        copyFileWithChannelFallback(source, actualDest)
         return actualDest.uri
       }
     }
