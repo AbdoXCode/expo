@@ -1,3 +1,5 @@
+import type { EventSubscription } from 'expo-modules-core';
+
 import ExpoFileSystem from './ExpoFileSystem';
 import {
   type DownloadOptions,
@@ -14,7 +16,6 @@ import {
 } from './ExpoFileSystem.types';
 import { PathUtilities } from './pathUtilities';
 import { FileSystemReadableStreamSource, FileSystemWritableSink } from './streams';
-import type { EventSubscription } from 'expo-modules-core';
 
 export class Paths extends PathUtilities {
   /**
@@ -461,7 +462,9 @@ export class DownloadTask extends ExpoFileSystem.FileSystemDownloadTask {
   async resumeAsync(): Promise<File | null> {
     this._assertState(['paused'], 'resumeAsync');
     if (!this._resumeData) {
-      throw new Error('No resume data available. Was the download paused before any data was received?');
+      throw new Error(
+        'No resume data available. Was the download paused before any data was received?'
+      );
     }
     this._state = 'active';
     try {
@@ -472,12 +475,7 @@ export class DownloadTask extends ExpoFileSystem.FileSystemDownloadTask {
         headers: this._options?.headers,
       };
 
-      const result = await super.resume(
-        this._url,
-        this._destination,
-        this._resumeData,
-        nativeOpts
-      );
+      const result = await super.resume(this._url, this._destination, this._resumeData, nativeOpts);
       if (result) {
         this._state = 'completed';
         this._resumeData = undefined;
@@ -517,7 +515,9 @@ export class DownloadTask extends ExpoFileSystem.FileSystemDownloadTask {
     if (!state.resumeData) {
       throw new Error('Cannot restore task: DownloadPauseState has no resumeData');
     }
-    const dest = state.fileUri.endsWith('/') ? new Directory(state.fileUri) : new File(state.fileUri);
+    const dest = state.fileUri.endsWith('/')
+      ? new Directory(state.fileUri)
+      : new File(state.fileUri);
     const mergedOptions: DownloadTaskOptions | undefined =
       options || state.headers
         ? { ...options, headers: { ...state.headers, ...options?.headers } }
@@ -568,7 +568,6 @@ export class DownloadTask extends ExpoFileSystem.FileSystemDownloadTask {
         this._options.onProgress({ bytesWritten: fileSize, totalBytes: fileSize });
       }
     }
-
   }
 }
 
