@@ -901,8 +901,6 @@ function DownloadTaskSection() {
   const taskRef = useRef<ReturnType<typeof File.createDownloadTask> | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const DOWNLOAD_URL = 'https://httpbin.org/drip?numbytes=5000&duration=2&delay=0&code=200';
-
   const onProgress = ({ bytesWritten, totalBytes }: DownloadProgress) => {
     const pct = totalBytes > 0 ? Math.round((bytesWritten / totalBytes) * 100) : '?';
     setProgress(`${bytesWritten} / ${totalBytes} bytes (${pct}%)`);
@@ -916,7 +914,7 @@ function DownloadTaskSection() {
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
     const dest = new File(Paths.cache, 'test_sandbox', 'download_task_test.bin');
-    const task = File.createDownloadTask(DOWNLOAD_URL, dest, {
+    const task = File.createDownloadTask('https://proof.ovh.net/files/100Mb.dat', dest, {
       onProgress,
       signal: abortController.signal,
     });
@@ -973,7 +971,9 @@ function DownloadTaskSection() {
         try {
           const state = taskRef.current!.savable();
           setSavedState(state);
-        } catch { /* not in paused state yet */ }
+        } catch {
+          /* not in paused state yet */
+        }
         setResultInfo('Paused again');
       }
     } catch (e: any) {
@@ -990,7 +990,10 @@ function DownloadTaskSection() {
     setResultInfo('');
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
-    const task = DownloadTask.fromSavable(savedState, { onProgress, signal: abortController.signal });
+    const task = DownloadTask.fromSavable(savedState, {
+      onProgress,
+      signal: abortController.signal,
+    });
     taskRef.current = task;
     setTaskState(task.state);
     try {
@@ -1054,9 +1057,7 @@ function DownloadTaskSection() {
       {taskState ? <MonoText>State: {taskState}</MonoText> : null}
       {progress ? <MonoText>Progress: {progress}</MonoText> : null}
       {resultInfo ? <MonoText>{resultInfo}</MonoText> : null}
-      {savedState ? (
-        <MonoText>Saved state: {JSON.stringify(savedState, null, 2)}</MonoText>
-      ) : null}
+      {savedState ? <MonoText>Saved state: {JSON.stringify(savedState, null, 2)}</MonoText> : null}
     </>
   );
 }
