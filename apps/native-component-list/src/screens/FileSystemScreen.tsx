@@ -854,6 +854,7 @@ function UploadSection({ currentFile }: { currentFile: File | null }) {
       console.log(e);
       setTaskState(taskRef.current?.state ?? null);
       setResult(`Error: ${e.message}`);
+      setProgress('Errored');
     } finally {
       setUploading(false);
       taskRef.current = null;
@@ -942,6 +943,7 @@ function DownloadTaskSection() {
       console.log(e);
       setTaskState(task.state);
       setStatus('idle');
+      setProgress('Errored');
       setResultInfo(`Error: ${e.message}`);
     }
   };
@@ -986,7 +988,9 @@ function DownloadTaskSection() {
     setStatus('downloading');
     setProgress('Resuming from saved state...');
     setResultInfo('');
-    const task = DownloadTask.fromSavable(savedState, { onProgress });
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+    const task = DownloadTask.fromSavable(savedState, { onProgress, signal: abortController.signal });
     taskRef.current = task;
     setTaskState(task.state);
     try {
