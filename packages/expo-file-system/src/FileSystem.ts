@@ -350,6 +350,9 @@ export class UploadTask extends ExpoFileSystem.FileSystemUploadTask {
 
       return result;
     } catch (error) {
+      if (this.state === 'cancelled') {
+        throw error;
+      }
       this._state = this._options?.signal?.aborted ? 'cancelled' : 'error';
       if (this._options?.signal?.aborted) throw createAbortError();
       throw error;
@@ -442,6 +445,9 @@ export class DownloadTask extends ExpoFileSystem.FileSystemDownloadTask {
       this._state = 'paused';
       return null;
     } catch (error) {
+      if (this.state === 'cancelled') {
+        throw error;
+      }
       this._state = this._options?.signal?.aborted ? 'cancelled' : 'error';
       if (this._options?.signal?.aborted) throw createAbortError();
       throw error;
@@ -486,6 +492,9 @@ export class DownloadTask extends ExpoFileSystem.FileSystemDownloadTask {
       this._state = 'paused';
       return null;
     } catch (error) {
+      if (this.state === 'cancelled') {
+        throw error;
+      }
       this._state = this._options?.signal?.aborted ? 'cancelled' : 'error';
       if (this._options?.signal?.aborted) throw createAbortError();
       throw error;
