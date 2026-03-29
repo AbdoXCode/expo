@@ -86,23 +86,25 @@ public final class FileSystemModule: Module {
         }
 
         do {
-          let destination: URL
-          if let to = to as? FileSystemDirectory {
-            let filename = httpResponse.suggestedFilename ?? url.lastPathComponent
-            destination = to.url.appendingPathComponent(filename)
-          } else {
-            destination = to.url
-          }
-          if FileManager.default.fileExists(atPath: destination.path) {
-            if options?.idempotent == true {
-              try FileManager.default.removeItem(at: destination)
+          try to.withCorrectTypeAndScopedAccess(permission: .write) {
+            let destination: URL
+            if let to = to as? FileSystemDirectory {
+              let filename = httpResponse.suggestedFilename ?? url.lastPathComponent
+              destination = to.url.appendingPathComponent(filename)
             } else {
-              throw DestinationAlreadyExistsException()
+              destination = to.url
             }
+            if FileManager.default.fileExists(atPath: destination.path) {
+              if options?.idempotent == true {
+                try FileManager.default.removeItem(at: destination)
+              } else {
+                throw DestinationAlreadyExistsException()
+              }
+            }
+            try FileManager.default.moveItem(at: fileURL, to: destination)
+            // TODO: Remove .url.absoluteString once returning shared objects works
+            promise.resolve(destination.absoluteString)
           }
-          try FileManager.default.moveItem(at: fileURL, to: destination)
-          // TODO: Remove .url.absoluteString once returning shared objects works
-          promise.resolve(destination.absoluteString)
         } catch {
           promise.reject(error)
         }
