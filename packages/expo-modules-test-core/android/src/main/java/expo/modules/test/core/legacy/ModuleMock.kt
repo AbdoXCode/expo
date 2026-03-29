@@ -1,9 +1,6 @@
 package expo.modules.test.core.legacy
 
-import android.content.Context
 import android.os.Bundle
-import androidx.test.core.app.ApplicationProvider
-import com.facebook.react.bridge.BridgeReactContext
 import expo.modules.core.interfaces.services.EventEmitter
 import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.ModuleHolder
@@ -119,13 +116,12 @@ data class ModuleMock<TestInterfaceType : Any, ModuleType : Module>(
 }
 
 private fun prepareMockAppContext(customAppContext: AppContext?): AppContext {
-  val reactContext = BridgeReactContext(ApplicationProvider.getApplicationContext<Context>())
   val appContext = customAppContext ?: createMockAppContext()
 
   // as AppContext holds only weak reference to Android Context which can be destroyed too early
   // we need to override it to return actual strong reference (held by mockk internals)
   val appContextSpy = convertToSpy(appContext)
-  every { appContextSpy getProperty "reactContext" } returns reactContext
+  every { appContextSpy getProperty "reactContext" } returns appContext.reactContext
   every { appContextSpy getProperty "hasActiveReactInstance" } returns true
   return appContextSpy
 }

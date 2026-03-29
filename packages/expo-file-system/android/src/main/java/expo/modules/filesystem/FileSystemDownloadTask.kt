@@ -67,7 +67,6 @@ class FileSystemDownloadTask : SharedObject() {
 
     val requestBuilder = Request.Builder().url(url.toString())
 
-    // Add headers
     options?.headers?.forEach { (key, value) ->
       requestBuilder.addHeader(key, value)
     }
@@ -101,8 +100,6 @@ class FileSystemDownloadTask : SharedObject() {
 
     // Add Range header for resuming
     requestBuilder.addHeader("Range", "bytes=$offset-")
-
-    // Add other headers
     options?.headers?.forEach { (key, value) ->
       requestBuilder.addHeader(key, value)
     }

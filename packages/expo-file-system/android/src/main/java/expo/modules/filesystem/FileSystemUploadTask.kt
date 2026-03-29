@@ -86,7 +86,6 @@ class FileSystemUploadTask : SharedObject() {
       throw UnableToUploadException("File does not exist")
     }
 
-    // Build request body
     val requestBody = when (options.uploadType) {
       UploadType.MULTIPART -> CountingRequestBody(
         createMultipartRequestBody(unifiedFile, options)
@@ -96,10 +95,8 @@ class FileSystemUploadTask : SharedObject() {
       UploadType.BINARY_CONTENT -> createBinaryBody(unifiedFile)
     }
 
-    // Build request
     val requestBuilder = Request.Builder().url(url)
 
-    // Add headers
     options.headers?.forEach { (key, value) ->
       requestBuilder.addHeader(key, value)
     }
@@ -194,12 +191,10 @@ fun createMultipartRequestBody(
 ): RequestBody {
   val bodyBuilder = MultipartBody.Builder().setType(MultipartBody.FORM)
 
-  // Add form parameters
   options.parameters?.forEach { (key, value) ->
     bodyBuilder.addFormDataPart(key, value)
   }
 
-  // Determine MIME type
   val fileName = file.fileName ?: "upload"
   val mimeType = options.mimeType ?: file.type ?: URLConnection.guessContentTypeFromName(fileName)
     ?: "application/octet-stream"
