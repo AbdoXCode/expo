@@ -15,6 +15,7 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.services.FilePermissionService
 import expo.modules.kotlin.typedarray.TypedArray
 import expo.modules.kotlin.types.Either
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -214,12 +215,24 @@ class FileSystemModule : Module() {
         file.creationTime
       }
 
-      Function("copy") { file: FileSystemFile, destination: FileSystemPath, options: RelocationOptions? ->
+      AsyncFunction("copy") Coroutine { file: FileSystemFile, destination: FileSystemPath, options: RelocationOptions? ->
         file.copy(destination, options ?: RelocationOptions())
       }
 
-      Function("move") { file: FileSystemFile, destination: FileSystemPath, options: RelocationOptions? ->
+      Function("copySync") { file: FileSystemFile, destination: FileSystemPath, options: RelocationOptions? ->
+        runBlocking {
+          file.copy(destination, options ?: RelocationOptions())
+        }
+      }
+
+      AsyncFunction("move") Coroutine { file: FileSystemFile, destination: FileSystemPath, options: RelocationOptions? ->
         file.move(destination, options ?: RelocationOptions())
+      }
+
+      Function("moveSync") { file: FileSystemFile, destination: FileSystemPath, options: RelocationOptions? ->
+        runBlocking {
+          file.move(destination, options ?: RelocationOptions())
+        }
       }
 
       Function("rename") { file: FileSystemFile, newName: String ->
@@ -315,12 +328,24 @@ class FileSystemModule : Module() {
         directory.validatePath()
       }
 
-      Function("copy") { directory: FileSystemDirectory, destination: FileSystemPath, options: RelocationOptions? ->
+      AsyncFunction("copy") Coroutine { directory: FileSystemDirectory, destination: FileSystemPath, options: RelocationOptions? ->
         directory.copy(destination, options ?: RelocationOptions())
       }
 
-      Function("move") { directory: FileSystemDirectory, destination: FileSystemPath, options: RelocationOptions? ->
+      Function("copySync") { directory: FileSystemDirectory, destination: FileSystemPath, options: RelocationOptions? ->
+        runBlocking {
+          directory.copy(destination, options ?: RelocationOptions())
+        }
+      }
+
+      AsyncFunction("move") Coroutine { directory: FileSystemDirectory, destination: FileSystemPath, options: RelocationOptions? ->
         directory.move(destination, options ?: RelocationOptions())
+      }
+
+      Function("moveSync") { directory: FileSystemDirectory, destination: FileSystemPath, options: RelocationOptions? ->
+        runBlocking {
+          directory.move(destination, options ?: RelocationOptions())
+        }
       }
 
       Function("rename") { directory: FileSystemDirectory, newName: String ->
