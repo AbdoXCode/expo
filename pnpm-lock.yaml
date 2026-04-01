@@ -133,6 +133,9 @@ importers:
       expo:
         specifier: workspace:*
         version: link:../../packages/expo
+      expo-app-metrics:
+        specifier: workspace:*
+        version: link:../../packages/expo-app-metrics
       expo-background-fetch:
         specifier: workspace:*
         version: link:../../packages/expo-background-fetch
@@ -175,6 +178,9 @@ importers:
       expo-notifications:
         specifier: workspace:*
         version: link:../../packages/expo-notifications
+      expo-observe:
+        specifier: workspace:*
+        version: link:../../packages/expo-observe
       expo-router:
         specifier: workspace:*
         version: link:../../packages/expo-router
@@ -4759,6 +4765,9 @@ importers:
       expo-updates-interface:
         specifier: workspace:*
         version: link:../expo-updates-interface
+      react-native:
+        specifier: 0.85.0-rc.5
+        version: 0.85.0-rc.5(@babel/core@7.29.0)(@react-native/jest-preset@0.85.0-rc.5(@babel/core@7.29.0)(react@19.2.3))(@types/react@19.2.14)(react@19.2.3)
     devDependencies:
       expo-module-scripts:
         specifier: workspace:*
@@ -18911,7 +18920,7 @@ snapshots:
 
   '@types/graceful-fs@4.1.9':
     dependencies:
-      '@types/node': 25.5.0
+      '@types/node': 22.19.15
 
   '@types/hammerjs@2.0.46': {}
 
@@ -22784,7 +22793,7 @@ snapshots:
       '@jest/expect': 29.7.0
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
-      '@types/node': 25.5.0
+      '@types/node': 22.19.15
       chalk: 4.1.2
       co: 4.6.0
       dedent: 1.7.2
@@ -24967,7 +24976,7 @@ snapshots:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 25.5.0
+      '@types/node': 22.19.15
       long: 4.0.0
 
   protobufjs@7.5.4:
@@ -24982,7 +24991,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 25.5.0
+      '@types/node': 22.19.15
       long: 5.3.2
 
   proxy-addr@2.0.7:
